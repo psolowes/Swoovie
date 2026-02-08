@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
+    "db:setup": "prisma migrate dev --name init && prisma db seed",
     "test": "vitest"
   },
   "prisma": {
