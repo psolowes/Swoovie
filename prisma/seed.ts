@@ -3,10 +3,15 @@ import path from "node:path";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+const GENRE_SEPARATOR = "|";
 
 type MovieSeed = {
+  sourceId: string;
   title: string;
   releaseYear: number;
+  genres: string[];
+  overview: string;
+  posterUrl: string;
 };
 
 async function main() {
@@ -15,10 +20,24 @@ async function main() {
   const movies = JSON.parse(raw) as MovieSeed[];
 
   for (const movie of movies) {
+    const genres = movie.genres.join(GENRE_SEPARATOR);
     await prisma.movie.upsert({
       where: { title: movie.title },
-      create: movie,
-      update: { releaseYear: movie.releaseYear }
+      create: {
+        sourceId: movie.sourceId,
+        title: movie.title,
+        releaseYear: movie.releaseYear,
+        genres,
+        overview: movie.overview,
+        posterUrl: movie.posterUrl
+      },
+      update: {
+        sourceId: movie.sourceId,
+        releaseYear: movie.releaseYear,
+        genres,
+        overview: movie.overview,
+        posterUrl: movie.posterUrl
+      }
     });
   }
 

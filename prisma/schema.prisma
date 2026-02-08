@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -18,8 +18,12 @@ model User {
 
 model Movie {
   id          String      @id @default(uuid())
+  sourceId    String
   title       String      @unique
   releaseYear Int
+  genres      String
+  overview    String
+  posterUrl   String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   preferred   Preferred[]
