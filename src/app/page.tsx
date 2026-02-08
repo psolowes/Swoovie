@@ -1,10 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { PointerEvent } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const DEFAULT_EMAIL = "demo@swoovie.dev";
-const SWIPE_THRESHOLD = 80;
 
 type Movie = {
   id: string;
@@ -15,18 +13,17 @@ type Movie = {
   posterUrl: string;
 };
 
-type SwipeState = {
-  id: string;
-  startX: number;
-  startY: number;
-};
-
 export default function HomePage() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [status, setStatus] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const swipeRef = useRef<SwipeState | null>(null);
+
+  const currentMovie = useMemo(
+    () => movies[currentIndex] ?? null,
+    [movies, currentIndex]
+  );
 
   const fetchMovies = useCallback(async (search: string) => {
     setIsLoading(true);
@@ -42,6 +39,7 @@ export default function HomePage() {
           genres: movie.genres as string[]
         }))
       );
+      setCurrentIndex(0);
     } catch (error) {
       console.error(error);
     } finally {
@@ -53,114 +51,49 @@ export default function HomePage() {
     fetchMovies(query);
   }, [fetchMovies, query]);
 
-  const sendPreference = useCallback(
-    async (movie: Movie, action: "like" | "dislike") => {
-      const response = await fetch("/api/preferences", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userEmail: DEFAULT_EMAIL,
-          movieId: movie.id,
-          action
-        })
-      });
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => Math.min(prev + 1, movies.length - 1));
+  }, [movies.length]);
 
-      if (!response.ok) {
-        setStatus("Could not save your feedback.");
-        return;
-      }
+  const handlePrev = useCallback(() => {
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+  }, []);
 
-      setStatus(
-        action === "like"
-          ? `Saved ${movie.title} to Preferred.`
-          : `Marked ${movie.title} as Disliked.`
-      );
-    },
-    []
-  );
+  const handleLike = useCallback(async () => {
+    if (!currentMovie) return;
+    const response = await fetch("/api/preferences", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userEmail: DEFAULT_EMAIL,
+        movieId: currentMovie.id
+      })
+    });
 
-  const handlePointerDown = useCallback(
-    (movie: Movie, event: PointerEvent) => {
-      swipeRef.current = {
-        id: movie.id,
-        startX: event.clientX,
-        startY: event.clientY
-      };
-    },
-    []
-  );
-
-  const handlePointerUp = useCallback(
-    async (movie: Movie, event: PointerEvent) => {
-      if (!swipeRef.current || swipeRef.current.id !== movie.id) return;
-
-      const deltaX = event.clientX - swipeRef.current.startX;
-      const deltaY = event.clientY - swipeRef.current.startY;
-      swipeRef.current = null;
-
-      if (
-        Math.abs(deltaX) < SWIPE_THRESHOLD ||
-        Math.abs(deltaX) < Math.abs(deltaY)
-      ) {
-        return;
-      }
-
-      if (deltaX > 0) {
-        await sendPreference(movie, "like");
-      } else {
-        await sendPreference(movie, "dislike");
-      }
-    },
-    [sendPreference]
-  );
-
-  const carouselContent = useMemo(() => {
-    if (isLoading) {
-      return <p>Loading movies...</p>;
+    if (!response.ok) {
+      setStatus("Could not save to Preferred.");
+      return;
     }
 
-    if (movies.length === 0) {
-      return <p>No movies match your search.</p>;
-    }
+    setStatus(`Saved ${currentMovie.title} to Preferred.`);
+  }, [currentMovie]);
 
-    return (
-      <ul className="carousel-list" aria-live="polite">
-        {movies.map((movie) => (
-          <li key={movie.id}>
-            <article
-              className="movie-card"
-              aria-label={`Movie card for ${movie.title}`}
-              onPointerDown={(event) => handlePointerDown(movie, event)}
-              onPointerUp={(event) => handlePointerUp(movie, event)}
-              onPointerCancel={() => {
-                swipeRef.current = null;
-              }}
-            >
-              <img src={movie.posterUrl} alt={`${movie.title} poster`} />
-              <div>
-                <h2>
-                  {movie.title} ({movie.releaseYear})
-                </h2>
-                <p className="genres">{movie.genres.join(" · ")}</p>
-                <p>{movie.overview}</p>
-                <div className="controls">
-                  <button
-                    type="button"
-                    onClick={() => sendPreference(movie, "dislike")}
-                  >
-                    Dislike
-                  </button>
-                  <button type="button" onClick={() => sendPreference(movie, "like")}>
-                    Like
-                  </button>
-                </div>
-              </div>
-            </article>
-          </li>
-        ))}
-      </ul>
-    );
-  }, [handlePointerDown, handlePointerUp, isLoading, movies, sendPreference]);
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowRight") {
+        handleNext();
+      }
+      if (event.key === "ArrowLeft") {
+        handlePrev();
+      }
+      if (event.key === "Enter") {
+        handleLike();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleLike, handleNext, handlePrev]);
 
   return (
     <main className="page">
@@ -169,8 +102,8 @@ export default function HomePage() {
           <p className="eyebrow">Swoovie</p>
           <h1>Find your next favorite movie.</h1>
           <p className="subcopy">
-            Scroll through the vertical carousel. Swipe right to like, swipe left
-            to dislike, and we will personalize your recommendations.
+            Search the catalog, swipe (or tap) through results, and like movies
+            to build your Preferred list.
           </p>
         </div>
         <nav className="nav">
@@ -191,11 +124,46 @@ export default function HomePage() {
           />
         </label>
 
-        <div className="carousel">{carouselContent}</div>
+        <div className="carousel" aria-live="polite">
+          {isLoading ? (
+            <p>Loading movies...</p>
+          ) : currentMovie ? (
+            <article className="movie-card" aria-label="Movie carousel card">
+              <img
+                src={currentMovie.posterUrl}
+                alt={`${currentMovie.title} poster`}
+              />
+              <div>
+                <h2>
+                  {currentMovie.title} ({currentMovie.releaseYear})
+                </h2>
+                <p className="genres">{currentMovie.genres.join(" · ")}</p>
+                <p>{currentMovie.overview}</p>
+              </div>
+            </article>
+          ) : (
+            <p>No movies match your search.</p>
+          )}
+        </div>
+
+        <div className="controls">
+          <button type="button" onClick={handlePrev} disabled={currentIndex <= 0}>
+            Previous
+          </button>
+          <button type="button" onClick={handleLike} disabled={!currentMovie}>
+            Like
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={currentIndex >= movies.length - 1}
+          >
+            Next
+          </button>
+        </div>
 
         <p className="hint">
-          Tip: Swipe right to like and left to dislike. You can also use the
-          buttons for keyboard and mouse input.
+          Tip: Use Left/Right arrows to navigate and Enter to like.
         </p>
         {status ? <p className="status">{status}</p> : null}
       </section>

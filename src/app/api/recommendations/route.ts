@@ -17,9 +17,6 @@ export async function GET(request: Request) {
     include: {
       preferred: {
         include: { movie: true }
-      },
-      disliked: {
-        include: { movie: true }
       }
     }
   });
@@ -29,22 +26,16 @@ export async function GET(request: Request) {
     genres: parseGenres(entry.movie.genres)
   }));
 
-  const dislikedIds = new Set(
-    (user?.disliked ?? []).map((entry) => entry.movieId)
-  );
-
   const candidates = await prisma.movie.findMany({
     orderBy: { title: "asc" }
   });
 
   const recommendations = recommendMovies({
     preferred: preferredMovies,
-    candidates: candidates
-      .filter((movie) => !dislikedIds.has(movie.id))
-      .map((movie) => ({
-        ...movie,
-        genres: parseGenres(movie.genres)
-      })),
+    candidates: candidates.map((movie) => ({
+      ...movie,
+      genres: parseGenres(movie.genres)
+    })),
     limit
   });
 

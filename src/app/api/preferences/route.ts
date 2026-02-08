@@ -19,10 +19,6 @@ export async function GET(request: Request) {
       preferred: {
         include: { movie: true },
         orderBy: { createdAt: "desc" }
-      },
-      disliked: {
-        include: { movie: true },
-        orderBy: { createdAt: "desc" }
       }
     }
   });
@@ -35,18 +31,9 @@ export async function GET(request: Request) {
     }
   }));
 
-  const disliked = (user?.disliked ?? []).map((entry) => ({
-    ...entry,
-    movie: {
-      ...entry.movie,
-      genres: parseGenres(entry.movie.genres)
-    }
-  }));
-
   return NextResponse.json({
     userEmail,
-    preferred,
-    disliked
+    preferred
   });
 }
 
@@ -99,20 +86,6 @@ export async function POST(request: Request) {
     );
   }
 
-  const action = body.action ?? "like";
-  if (action !== "like" && action !== "dislike") {
-    return NextResponse.json(
-      {
-        error: {
-          code: "INVALID_ACTION",
-          message: "action must be like or dislike.",
-          fields: ["action"]
-        }
-      },
-      { status: 400 }
-    );
-  }
-
   const movie = await prisma.movie.findUnique({
     where: { id: body.movieId },
     select: { id: true }
@@ -137,42 +110,6 @@ export async function POST(request: Request) {
     create: { email: body.userEmail }
   });
 
-  if (action === "dislike") {
-    await prisma.preferred.deleteMany({
-      where: { userId: user.id, movieId: body.movieId }
-    });
-
-    const disliked = await prisma.disliked.upsert({
-      where: {
-        userId_movieId: {
-          userId: user.id,
-          movieId: body.movieId
-        }
-      },
-      update: {},
-      create: {
-        userId: user.id,
-        movieId: body.movieId
-      },
-      include: { movie: true }
-    });
-
-    return NextResponse.json({
-      action,
-      disliked: {
-        ...disliked,
-        movie: {
-          ...disliked.movie,
-          genres: parseGenres(disliked.movie.genres)
-        }
-      }
-    });
-  }
-
-  await prisma.disliked.deleteMany({
-    where: { userId: user.id, movieId: body.movieId }
-  });
-
   const preferred = await prisma.preferred.upsert({
     where: {
       userId_movieId: {
@@ -189,7 +126,6 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json({
-    action,
     preferred: {
       ...preferred,
       movie: {
@@ -224,9 +160,6 @@ export async function DELETE(request: Request) {
   }
 
   await prisma.preferred.deleteMany({
-    where: { userId: user.id, movieId }
-  });
-  await prisma.disliked.deleteMany({
     where: { userId: user.id, movieId }
   });
 

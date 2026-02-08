@@ -37,10 +37,9 @@ const movies = [
 ];
 
 describe("GET /api/recommendations", () => {
-  it("excludes preferred and disliked movies", async () => {
+  it("excludes preferred movies", async () => {
     mockedPrisma.prisma.user.findUnique.mockResolvedValue({
-      preferred: [{ movie: movies[0] }],
-      disliked: [{ movieId: "2" }]
+      preferred: [{ movie: movies[0] }]
     });
     mockedPrisma.prisma.movie.findMany.mockResolvedValue(movies);
 
@@ -52,9 +51,6 @@ describe("GET /api/recommendations", () => {
     };
 
     expect(body.recommendations.find((movie) => movie.id === "1")).toBe(
-      undefined
-    );
-    expect(body.recommendations.find((movie) => movie.id === "2")).toBe(
       undefined
     );
   });
