@@ -10,8 +10,61 @@ export async function POST(request: Request) {
 
   if (!body.userEmail || !body.movieId) {
     return NextResponse.json(
-      { error: "userEmail and movieId are required." },
+      {
+        error: {
+          code: "MISSING_FIELDS",
+          message: "userEmail and movieId are required.",
+          fields: ["userEmail", "movieId"],
+        },
+      },
       { status: 400 }
+    );
+  }
+
+  if (
+    typeof body.userEmail !== "string" ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.userEmail)
+  ) {
+    return NextResponse.json(
+      {
+        error: {
+          code: "INVALID_EMAIL",
+          message: "userEmail must be a valid email address.",
+          fields: ["userEmail"],
+        },
+      },
+      { status: 400 }
+    );
+  }
+
+  if (typeof body.movieId !== "string") {
+    return NextResponse.json(
+      {
+        error: {
+          code: "INVALID_MOVIE_ID",
+          message: "movieId must be a string.",
+          fields: ["movieId"],
+        },
+      },
+      { status: 400 }
+    );
+  }
+
+  const movie = await prisma.movie.findUnique({
+    where: { id: body.movieId },
+    select: { id: true },
+  });
+
+  if (!movie) {
+    return NextResponse.json(
+      {
+        error: {
+          code: "MOVIE_NOT_FOUND",
+          message: "Movie does not exist.",
+          fields: ["movieId"],
+        },
+      },
+      { status: 404 }
     );
   }
 
