@@ -1,5 +1,66 @@
 [
-  { "title": "Inception", "releaseYear": 2010 },
-  { "title": "The Matrix", "releaseYear": 1999 },
-  { "title": "Spirited Away", "releaseYear": 2001 }
+  {
+    "sourceId": "tmdb-27205",
+    "title": "Inception",
+    "releaseYear": 2010,
+    "genres": ["Action", "Science Fiction", "Thriller"],
+    "overview": "A skilled thief enters dreams to steal secrets and is offered a chance at redemption.",
+    "posterUrl": "https://placehold.co/300x450?text=Inception"
+  },
+  {
+    "sourceId": "tmdb-603",
+    "title": "The Matrix",
+    "releaseYear": 1999,
+    "genres": ["Action", "Science Fiction"],
+    "overview": "A hacker learns his reality is a simulation and joins a rebellion against its creators.",
+    "posterUrl": "https://placehold.co/300x450?text=The+Matrix"
+  },
+  {
+    "sourceId": "tmdb-129",
+    "title": "Spirited Away",
+    "releaseYear": 2001,
+    "genres": ["Animation", "Fantasy"],
+    "overview": "A young girl enters a spirit world and must work to free her parents.",
+    "posterUrl": "https://placehold.co/300x450?text=Spirited+Away"
+  },
+  {
+    "sourceId": "tmdb-24428",
+    "title": "The Avengers",
+    "releaseYear": 2012,
+    "genres": ["Action", "Adventure"],
+    "overview": "Earth's mightiest heroes assemble to stop a global threat.",
+    "posterUrl": "https://placehold.co/300x450?text=The+Avengers"
+  },
+  {
+    "sourceId": "tmdb-157336",
+    "title": "Interstellar",
+    "releaseYear": 2014,
+    "genres": ["Adventure", "Science Fiction"],
+    "overview": "Explorers travel through a wormhole to save humanity from a dying Earth.",
+    "posterUrl": "https://placehold.co/300x450?text=Interstellar"
+  },
+  {
+    "sourceId": "tmdb-240",
+    "title": "The Godfather Part II",
+    "releaseYear": 1974,
+    "genres": ["Crime", "Drama"],
+    "overview": "The saga of the Corleone family continues through parallel past and present stories.",
+    "posterUrl": "https://placehold.co/300x450?text=Godfather+II"
+  },
+  {
+    "sourceId": "tmdb-680",
+    "title": "Pulp Fiction",
+    "releaseYear": 1994,
+    "genres": ["Crime", "Drama"],
+    "overview": "Interwoven tales of crime and redemption unfold in Los Angeles.",
+    "posterUrl": "https://placehold.co/300x450?text=Pulp+Fiction"
+  },
+  {
+    "sourceId": "tmdb-354912",
+    "title": "Coco",
+    "releaseYear": 2017,
+    "genres": ["Animation", "Family", "Fantasy"],
+    "overview": "A young musician journeys to the Land of the Dead to discover his family's story.",
+    "posterUrl": "https://placehold.co/300x450?text=Coco"
+  }
 ]
