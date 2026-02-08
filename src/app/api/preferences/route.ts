@@ -41,6 +41,7 @@ export async function POST(request: Request) {
   const body = (await request.json()) as {
     userEmail?: string;
     movieId?: string;
+    action?: "like" | "dislike";
   };
 
   if (!body.userEmail || !body.movieId) {

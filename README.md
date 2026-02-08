@@ -5,6 +5,7 @@ Next.js 14 + TypeScript starter with Prisma (SQLite), Vitest, ESLint, and Pretti
 ## Setup
 
 ```bash
+cp .env.example .env
 npm install
 ```
 
