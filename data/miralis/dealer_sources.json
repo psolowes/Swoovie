@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "brand": "Miralis",
+    "generated_on": "2026-04-03",
+    "currency": "CAD",
+    "notes": [
+      "Dataset assembled from publicly accessible Miralis sources and indexable PDFs.",
+      "Dealer-only documents (price books, SKU-level order sheets, net cost grids) were not publicly exposed in indexed sources."
+    ]
+  },
+  "sources": [
+    {
+      "id": "magazine",
+      "title": "Miralis Magazine (English)",
+      "url": "https://cms.miralis.com/uploads/Miralis_Magazine-anglo.cleaned.pdf",
+      "highlights": [
+        "Door model + code mapping by collection (Laminate, European Laminate, Similacquer, Lacquer, Wood, Advanced Engineering/FENIX).",
+        "Collection characteristics such as durability, humidity resistance, easy maintenance, matching interiors.",
+        "Cabinet interior section: melamine and plywood cabinet interiors in four colors/textures.",
+        "Innovation section: Curio with LED, concealed hinges, wall-mount system, custom-made options."
+      ],
+      "evidence_lines": ["L247-L305@P15", "L308-L313@P16", "L400-L405@P22", "L531-L533@P29", "L1192-L1205@P58", "L1222-L1228@P60"]
+    },
+    {
+      "id": "maintenance",
+      "title": "Miralis Maintenance Guide (English)",
+      "url": "https://cms.miralis.com/uploads/Maintenance-Guide.cleaned.pdf",
+      "highlights": [
+        "Lifecycle and durability context: hinge adjustments, drawer hardware platforms (Blum, Grass, Hettich).",
+        "Corrosion prevention and cleaner storage guidance affecting long-term performance.",
+        "Lifetime limited warranty section start and update date for products sold after September 23, 2019.",
+        "Warranty exclusions include installation/removal cost and damage outside Miralis control."
+      ],
+      "evidence_lines": ["L232-L252@P7-P8", "L278-L281@P9", "L292-L294@P11", "L325-L333@P11"]
+    },
+    {
+      "id": "catalogue_page",
+      "title": "Miralis Kitchen Cabinets page",
+      "url": "https://www.miralis.com/en/kitchen-cabinets",
+      "highlights": [
+        "Public-facing positioning links back to catalogue and maintenance assets.",
+        "Collections shown include Modern, Contemporary, and Handleless approaches used for value positioning."
+      ],
+      "evidence_lines": ["web indexed page + outbound links"]
+    }
+  ],
+  "product_offering": {
+    "door_models": [
+      {"collection": "Laminate", "models": ["Scott 1131", "Maria 2536", "Russell 2524", "Mapleton 2334", "Wallace 2324", "Hatley 2134", "Trenton 2124"]},
+      {"collection": "European Laminate", "models": ["Graz 1501"]},
+      {"collection": "Similacquer", "models": ["Cologne 3511", "Beverly 3124"]},
+      {"collection": "Lacquer", "models": ["Bologne 5064M", "Providence 3561"]},
+      {"collection": "Advanced Engineering (FENIX)", "models": ["Cologne 3511", "Tribeca 3538"]},
+      {"collection": "Wood", "models": ["Jacksonville 5051", "Pittsburgh GFALU-101"]}
+    ],
+    "color_examples": [
+      "Laminate: 113 Super White, K18 Monaco, L761 Moonlight, M2055 Ganache",
+      "European Laminate: H210 Obscurity, H212 Ash Samara, H216 Amber Drupe",
+      "Similacquer Matte/Gloss: SA107-G Simply White, SA350-M Northern Floe, SA352-M Sea Breeze",
+      "Advanced Engineering/FENIX: SF115-M Alpaca Wool, SF119-M Black Satin, SF200 Silver Steel"
+    ],
+    "construction_options": [
+      "Cabinet interior substrates: melamine cabinet and plywood cabinet options",
+      "Interior finish textures: linen and wood texture",
+      "Interior colors: four colorways including anthracite linen and white anthracite linen",
+      "Finger Grip variants available on all Miralis materials (handleless style)"
+    ],
+    "hardware_and_accessories": [
+      "Hinges: adjustable hidden and standard hinges",
+      "Drawer systems referenced: Blum Legrabox + Blumotion, Grass Vionaro V8, Hettich AvanTech YOU, Hettich Actro 5D",
+      "Contemporary Curio accessory furniture: LED strip lighting, glass shelving, concealed hinges, wall mounting"
+    ]
+  },
+  "commercial_analysis": {
+    "price_drivers": [
+      "Material ladder typically moves Laminate < Similacquer < Lacquer < Advanced Engineering/FENIX or premium wood selections.",
+      "Door profile complexity (45° assemblies, finger grip machining, wood species) and finish process elevate labor cost.",
+      "Accessory density (lighting, curio integrations, premium drawer runners) increases system cost.",
+      "Custom colors and grain-alignment requests are likely quote multipliers."
+    ],
+    "durability_factors": [
+      "Humidity resistance is explicitly marketed for Similacquer.",
+      "European laminate is described as very resistant with matching interior finish program.",
+      "Maintenance guide indicates regular hinge tuning as part of expected normal use.",
+      "Chemical storage practices can influence corrosion and long-term hardware life."
+    ],
+    "value_framework": [
+      "Entry value: laminate programs with wide color matrix and simpler edge architecture.",
+      "Mid-tier value: similacquer offers design lift with manageable maintenance profile.",
+      "Upper-tier value: lacquer and FENIX/advanced engineering for premium appearance and tactile performance.",
+      "Performance adders: branded runner platforms and integrated lighting/accessories."
+    ],
+    "missing_for_true_dealer_pricing": [
+      "Current dealer price book / net cost matrix",
+      "Cabinet box SKU catalog by width-height-depth code",
+      "Official order sheets and option code dictionary",
+      "Upcharge tables for finish upgrades, modifications, and rush lead times"
+    ]
+  }
+}
